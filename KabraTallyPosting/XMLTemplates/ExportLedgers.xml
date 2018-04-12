@@ -1,0 +1,55 @@
+<ENVELOPE>
+  <HEADER>
+    <VERSION>1</VERSION>
+    <TALLYREQUEST>Export</TALLYREQUEST>
+    <TYPE>Data</TYPE>
+    <ID>List of Ledgers</ID>
+  </HEADER>
+  <BODY>
+    <DESC>
+      <STATICVARIABLES>
+        <SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT>
+        <SVCURRENTCOMPANY>KONDUSKAR PILOT</SVCURRENTCOMPANY>
+      </STATICVARIABLES>
+      <TDL>
+        <TDLMESSAGE>
+          <REPORT NAME="List of Ledgers" ISMODIFY="No" ISFIXED="No" ISINITIALIZE="No" ISOPTION="No" ISINTERNAL="No">
+            <FORMS>List of Ledgers</FORMS>
+          </REPORT>
+          <FORM NAME="List of Ledgers" ISMODIFY="No" ISFIXED="No" ISINITIALIZE="No" ISOPTION="No" ISINTERNAL="No">
+            <TOPPARTS>List of Ledgers</TOPPARTS>
+            <XMLTAG>"List of Ledgers"</XMLTAG>
+          </FORM>
+          <PART NAME="List of Ledgers" ISMODIFY="No" ISFIXED="No" ISINITIALIZE="No" ISOPTION="No" ISINTERNAL="No">
+            <TOPLINES>List of Ledgers</TOPLINES>
+            <REPEAT>List of Ledgers : Collection of Ledgers</REPEAT>
+            <SCROLLED>Vertical</SCROLLED>
+          </PART>
+          <LINE NAME="List of Ledgers" ISMODIFY="No" ISFIXED="No" ISINITIALIZE="No" ISOPTION="No" ISINTERNAL="No">
+            <LEFTFIELDS>List of Ledgers</LEFTFIELDS>
+            <LEFTFIELDS>MasterID</LEFTFIELDS>
+            <LEFTFIELDS>ParentName</LEFTFIELDS>
+          </LINE>
+
+          <FIELD NAME="List of Ledgers"  ISMODIFY="No" ISFIXED="No" ISINITIALIZE="No" ISOPTION="No" ISINTERNAL="No">
+            <SET>$Name</SET>
+            <XMLTAG>"NAME"</XMLTAG>
+          </FIELD>
+          <FIELD NAME="ParentName" ISMODIFY="No" ISFIXED="No" ISINITIALIZE="No" ISOPTION="No" ISINTERNAL="No">
+            <SET>$Parent</SET>
+            <XMLTAG>"PARENT"</XMLTAG>
+          </FIELD>
+          <FIELD NAME="MasterID" ISMODIFY="No" ISFIXED="No" ISINITIALIZE="No" ISOPTION="No" ISINTERNAL="No">
+            <SET>$MasterId</SET>
+            <XMLTAG>"MASTERID"</XMLTAG>
+          </FIELD>
+
+          <COLLECTION NAME="Collection of Ledgers" ISMODIFY="No" ISFIXED="No" ISINITIALIZE="No" ISOPTION="No" ISINTERNAL="No">
+            <TYPE>Ledger</TYPE>
+          </COLLECTION>
+        </TDLMESSAGE>
+      </TDL>
+
+    </DESC>
+  </BODY>
+</ENVELOPE>

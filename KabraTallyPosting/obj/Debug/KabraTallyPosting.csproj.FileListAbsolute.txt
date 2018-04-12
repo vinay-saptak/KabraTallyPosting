@@ -1,0 +1,7 @@
+E:\KabraTallyPosting\KabraTallyPosting\KabraTallyPosting\bin\Debug\KabraTallyPosting.exe.config
+E:\KabraTallyPosting\KabraTallyPosting\KabraTallyPosting\bin\Debug\KabraTallyPosting.exe
+E:\KabraTallyPosting\KabraTallyPosting\KabraTallyPosting\bin\Debug\KabraTallyPosting.pdb
+E:\KabraTallyPosting\KabraTallyPosting\KabraTallyPosting\bin\Debug\MySql.Data.dll
+E:\KabraTallyPosting\KabraTallyPosting\KabraTallyPosting\obj\Debug\KabraTallyPosting.csprojResolveAssemblyReference.cache
+E:\KabraTallyPosting\KabraTallyPosting\KabraTallyPosting\obj\Debug\KabraTallyPosting.exe
+E:\KabraTallyPosting\KabraTallyPosting\KabraTallyPosting\obj\Debug\KabraTallyPosting.pdb
