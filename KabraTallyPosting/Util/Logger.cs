@@ -65,6 +65,35 @@ namespace KabraTallyPosting.Util
                 string str = ex.Message;
             }
         }
+
+        public static void WriteLogAlert2(string data)
+        {
+            try
+            {
+                int intServerMinsOffset = Convert.ToInt32(ConfigurationManager.AppSettings["ServerOffsetMins"]);
+                StreamWriter log;
+                string logpath = ConfigurationManager.AppSettings["LogPath"];
+                if (!File.Exists(@logpath + "Alertfile2" + ".txt"))
+                {
+                    log = new StreamWriter(@logpath + "Alertfile2" + ".txt");
+                }
+                else
+                {
+                    log = File.AppendText(@logpath + "Alertfile2" + ".txt");
+                }
+
+                string currenttime = Util.GetServerDateTime().ToString("dd-MMM-yyy HH:mm:ss.fff");
+                if (data != "")
+                    log.WriteLine(currenttime + " : " + data);
+
+                log.Close();
+            }
+            catch (Exception ex)
+            {
+                string str = ex.Message;
+            }
+        }
+
         public static void WriteLog(string heading, string subheading, string data, bool toSendMail = true)
         {
             string msg = heading + "::" + subheading + "::" + data;

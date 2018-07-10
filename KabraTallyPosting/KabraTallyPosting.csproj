@@ -84,6 +84,7 @@
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Validation\BranchBooking.cs" />
+    <Compile Include="Validation\FranchiseCollection.cs" />
     <Compile Include="Validation\IValidate.cs" />
     <Compile Include="Validation\OfflineAgentCollection.cs" />
     <Compile Include="Validation\OnlineAgentCollection.cs" />
@@ -96,6 +97,7 @@
   <ItemGroup>
     <Content Include="XMLTemplates\BranchJournal.xml" />
     <Content Include="XMLTemplates\Credit.xml" />
+    <Content Include="XMLTemplates\ExportCostCenters.xml" />
     <Content Include="XMLTemplates\ExportLedgers.xml" />
     <Content Include="XMLTemplates\ExportSingleLedger.xml" />
     <Content Include="XMLTemplates\Franchise.xml" />

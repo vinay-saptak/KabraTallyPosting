@@ -42,7 +42,7 @@ namespace KabraTallyPosting.Util
                 message.BodyEncoding = System.Text.Encoding.UTF8;
                 message.Body = strMessage;
                 message.IsBodyHtml = true;
-                message.Subject = "Alert :: Kabra Travels Tally Posting Cron";
+                message.Subject = "AlertVersion 2 :: Kabra Travels Tally Posting Cron";
 
                 smtp.Send(message);
 

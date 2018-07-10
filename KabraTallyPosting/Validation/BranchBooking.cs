@@ -30,12 +30,14 @@ namespace KabraTallyPosting.Validation
                         {
                             vr.Status = 0;
                             vr.ErrorMessage = "Ledger Id does not exists for JourneyDate: " + bookingsList[i].JourneyDate + " and For BranchId: " + bookingsList[i].BranchId ;
+                            Logger.WriteLog("Ledger Id does not exists for JourneyDate: " + bookingsList[i].JourneyDate + " and For BranchId: " + bookingsList[i].BranchId);
                             break;
                         }
                         if (bookingsList[i].ClassId == 0)
                         {
                             vr.Status = 0;
                             vr.ErrorMessage = "ClassId does not exists for JourneyDate: " + bookingsList[i].JourneyDate + " and For BranchId: " + bookingsList[i].BranchId;
+                            Logger.WriteLog("ClassId does not exists for JourneyDate: " + bookingsList[i].JourneyDate + " and For BranchId: " + bookingsList[i].BranchId);
                             break;
                         }
 

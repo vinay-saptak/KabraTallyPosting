@@ -22,7 +22,7 @@ namespace KabraTallyPosting.CRSAPI
                 CRSDAL dal = new CRSDAL();
                 dal.AddParameter("p_companyId", companyid, ParameterDirection.Input);
                 dal.AddParameter("p_journeyDate", journeyDate, ParameterDirection.Input);
-                DataSet dsOutPut = dal.ExecuteSelect("spKabraTallyGet_OnlineAgentCollection", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", false, "", false);
+                DataSet dsOutPut = dal.ExecuteSelect("spKabraTallyGet_OnlineAgentCollection_test", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", false, "", false);
 
                 if (dsOutPut != null && dsOutPut.Tables != null && dsOutPut.Tables.Count > 0)
                 {
@@ -77,39 +77,45 @@ namespace KabraTallyPosting.CRSAPI
 
                 for (int i = 0; i < agentlist.Count; i++)
                 {
-
-
-                    OnlineAgentDetails al = agentlist[i];
-                   // string narration = AccountingUtil.GetNarration(al);
-                    try
+                    if (strErr == "")
                     {
-                        dal = new CRSDAL();
-                        dal.AddParameter("p_CompanyID", companyId, ParameterDirection.Input);
-                        dal.AddParameter("p_JourneyDate", agentlist[i].JourneyDate, ParameterDirection.Input);
-                        dal.AddParameter("p_DebitLedgerId", agentlist[i].DebitLedgerId, ParameterDirection.Input);
-                        dal.AddParameter("p_CreditLedgerId", agentlist[i].CreditLedgerId, ParameterDirection.Input);
-                        dal.AddParameter("p_ClassID", agentlist[i].ClassID, ParameterDirection.Input);
-                        dal.AddParameter("p_TotalAmount", agentlist[i].TotalFare, ParameterDirection.Input);
-                        dal.AddParameter("p_docnumber", agentlist[i].Docnumber, 300, ParameterDirection.Input);
-                        dal.AddParameter("p_AgentComm", agentlist[i].AgentComm, ParameterDirection.Input);
-                         dal.AddParameter("p_NetAmount", agentlist[i].NetAmount, ParameterDirection.Input);
-                        dal.AddParameter("p_GST", agentlist[i].GST, ParameterDirection.Input);
-                        dal.AddParameter("p_Discount", agentlist[i].Discount,  ParameterDirection.Input);
+
+                        OnlineAgentDetails al = agentlist[i];
+                        // string narration = AccountingUtil.GetNarration(al);
+                        try
+                        {
+                            dal = new CRSDAL();
+                            dal.AddParameter("p_CompanyID", companyId, ParameterDirection.Input);
+                            dal.AddParameter("p_JourneyDate", agentlist[i].JourneyDate, ParameterDirection.Input);
+                            dal.AddParameter("p_DebitLedgerId", agentlist[i].DebitLedgerId, ParameterDirection.Input);
+                            dal.AddParameter("p_CreditLedgerId", agentlist[i].CreditLedgerId, ParameterDirection.Input);
+                            dal.AddParameter("p_ClassID", agentlist[i].ClassID, ParameterDirection.Input);
+                            dal.AddParameter("p_TotalAmount", agentlist[i].TotalFare, ParameterDirection.Input);
+                            dal.AddParameter("p_docnumber", agentlist[i].Docnumber, 300, ParameterDirection.Input);
+                            dal.AddParameter("p_AgentComm", agentlist[i].AgentComm, ParameterDirection.Input);
+                            dal.AddParameter("p_NetAmount", agentlist[i].NetAmount, ParameterDirection.Input);
+                            dal.AddParameter("p_GST", agentlist[i].GST, ParameterDirection.Input);
+                            dal.AddParameter("p_Discount", agentlist[i].Discount, ParameterDirection.Input);
 
 
-                        int status = dal.ExecuteDML("spKabraTallySet_OnlineAgentCollection", CommandType.StoredProcedure, 0, ref strErr);
+                            int status = dal.ExecuteDML("spKabraTallySet_OnlineAgentCollection_Test", CommandType.StoredProcedure, 0, ref strErr);
+
+                            if (strErr != "")
+                            {
+                                throw new Exception();
+                            }
+
+                            EntryCounter.GetInstance().AddCount(1);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteLog("OnlineAgentAPI", "CreateJournalForOnlineAgentCollection", " Error for Agent: " + agentlist[i].AgentName + " " + ex.Message);
+                            Logger.WriteLogAlert2("OnlineAgentAPI" + "CreateJournalForOnlineAgentCollection" + " Error for Agent: " + agentlist[i].AgentName + " " + ex.Message);
+                            PostingAPI.UpdatePostingStatusForException(companyId, agentlist[i].JourneyDate, 9);
 
 
-                        EntryCounter.GetInstance().AddCount(1);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog("OnlineAgentAPI", "CreateJournalForOnlineAgentCollection", " Error for Agent: " + agentlist[i].AgentName + " " + ex.Message);
-                        Logger.WriteLogAlert("OnlineAgentAPI" + "CreateJournalForOnlineAgentCollection" + " Error for Agent: " + agentlist[i].AgentName + " " + ex.Message);
-                        PostingAPI.UpdatePostingStatusForException(companyId, agentlist[i].JourneyDate, 7);
-
-
+                        }
                     }
                 }
             }

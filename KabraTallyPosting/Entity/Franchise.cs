@@ -17,8 +17,13 @@ namespace KabraTallyPosting.Entity
         public decimal TotalAmt { get; set; }
         public decimal NetAmount { get; set; }
         public decimal ServiceTax { get; set; }
-        public DateTime Bookingdate { get; set; }
+        public DateTime JourneyDate { get; set; }
+        public int ClassID { get; set; }
+        public string classname { get; set; }
+        public decimal Discount { get; set; }
+        public decimal AggentComm { get; set; }
         
+
 
     }
 }

@@ -31,12 +31,14 @@ namespace KabraTallyPosting.Validation
                         {
                             vr.Status = 0;
                             vr.ErrorMessage = "Ledger Id does not exists for AgentName: " + OFFlineAgentCollectionList[i].AgentName + " and For AgentId: " + OFFlineAgentCollectionList[i].AgentId + "JourneyDate: " + OFFlineAgentCollectionList[i].JourneyDate;
+                            Logger.WriteLog("Ledger Id does not exists for AgentName: " + OFFlineAgentCollectionList[i].AgentName + " and For AgentId: " + OFFlineAgentCollectionList[i].AgentId + "JourneyDate: " + OFFlineAgentCollectionList[i].JourneyDate);
                             break;
                         }
                         if (OFFlineAgentCollectionList[i].ClassID == 0)
                         {
                             vr.Status = 0;
                             vr.ErrorMessage = "Class Id does not exists for BusId: " + OFFlineAgentCollectionList[i].BusId + " and For AgentId: " + OFFlineAgentCollectionList[i].AgentId + "JourneyDate: " + OFFlineAgentCollectionList[i].JourneyDate;
+                            Logger.WriteLog("Class Id does not exists for Bus ID: " + OFFlineAgentCollectionList[i].BusId + " and For AgentId: " + OFFlineAgentCollectionList[i].AgentId + "JourneyDate: " + OFFlineAgentCollectionList[i].JourneyDate);
                             break;
                         }
 
@@ -45,7 +47,7 @@ namespace KabraTallyPosting.Validation
                 else
                 {
                     vr.Status = 0;
-                    //vr.ErrorMessage = "No data exists for Offline Agent Collection";
+                    vr.ErrorMessage = "No data exists for Offline Agent Collection";
                 }
             }
             catch (Exception ex)

@@ -135,5 +135,63 @@ namespace KabraTallyPosting.CRSAPI
             }
             return status;
         }
+        
+        public Boolean SlaveStatus(ref int arrSlaveValue)
+        {
+            string strErr = "";
+            DataSet ds = new DataSet();
+            Boolean blnSuccess = false;
+            MySqlDataAdapter adp = new MySqlDataAdapter();
+            MySqlConnection conn = new MySqlConnection(strConnStringSlave);
+            arrSlaveValue = 99999;
+            strErr = "";
+            try
+            {
+                cmd.CommandText = "SHOW SLAVE STATUS";
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandTimeout = 1;
+                //conn.ConnectionTimeout = 1;
+
+                conn.Open();
+                cmd.Connection = conn;
+                adp.SelectCommand = cmd;
+                adp.Fill(ds);
+                //conn.Close();
+            }
+            catch (System.Exception ex)
+            {
+                ds = null;
+                strErr = ex.Message;
+            }
+            finally
+            {
+                adp.Dispose();
+                cmd.Dispose();
+                conn.Close();
+                conn.Dispose();
+                conn = null;
+            }
+
+            string strSecondsBehindMaster = "";
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                strSecondsBehindMaster = Convert.ToString(ds.Tables[0].Rows[0]["Seconds_Behind_Master"]).ToUpper();
+                
+                if (strSecondsBehindMaster != "")
+                    arrSlaveValue = Convert.ToInt32(strSecondsBehindMaster);
+
+                if (strSecondsBehindMaster != "" && strSecondsBehindMaster != "NULL")
+                {
+                    if (ds.Tables[0].Rows[0]["slave_SQL_running"].ToString().ToUpper() == "YES")
+                    {
+                        blnSuccess = true;
+                    }
+                }
+            }
+
+            return blnSuccess;
+
+        }
     }
 }

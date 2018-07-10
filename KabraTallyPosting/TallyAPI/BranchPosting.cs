@@ -9,6 +9,8 @@ using KabraTallyPosting.CRSAPI;
 using KabraTallyPosting.Entity;
 using KabraTallyPosting.Validation;
 using System.Net.NetworkInformation;
+using System.IO;
+using System.Data;
 
 namespace KabraTallyPosting.TallyAPI
 {
@@ -27,9 +29,8 @@ namespace KabraTallyPosting.TallyAPI
                 validationCollection.Add(new BranchBooking());
                 validationCollection.Add(new OnlineAgentCollection());
                 validationCollection.Add(new OfflineAgentCollection());
-
-
-
+                validationCollection.Add(new FranchiseCollection());
+                
                 for (int i = 0; i < validationCollection.Count; i++)
                 {
                     vr = validationCollection[i].Validate(companyId,pJob.JourneyDate);
@@ -89,11 +90,11 @@ namespace KabraTallyPosting.TallyAPI
                 {
                     Logger.WriteLog("Started Branch Booking...");
                     List<Booking> bookingsList = BookingsAPI.GetBranchBookings(companyid, journeyDate);
-                   
-                 
+                    Logger.WriteLog("Entry No 1 :  Branch Collection List : " + bookingsList.Count);
+
                     if (bookingsList != null && bookingsList.Count > 0)
                     {
-                        Logger.WriteLog("Entry No 1 :  Branch Collection List : 1");
+                        
                         BookingsAPI.CreateJournalForUserWiseCollection(companyid, bookingsList);
                     }
 
@@ -106,10 +107,7 @@ namespace KabraTallyPosting.TallyAPI
 
                 #endregion
             }
-
-
-           
-
+            
             Boolean toPostOnlineAgentCollection = Convert.ToBoolean(ConfigurationManager.AppSettings["PostOnlineAgentCollection"].ToString());
 
             if (toPostOnlineAgentCollection)
@@ -137,8 +135,7 @@ namespace KabraTallyPosting.TallyAPI
 
                 #endregion
             }
-
-
+            
             Boolean toPostOfflineAgentCollection = Convert.ToBoolean(ConfigurationManager.AppSettings["PostOfflineAgentCollection"].ToString());
 
             if (toPostOfflineAgentCollection)
@@ -167,43 +164,89 @@ namespace KabraTallyPosting.TallyAPI
                 #endregion
             }
 
+            Boolean toFranchiseBookings = Convert.ToBoolean(ConfigurationManager.AppSettings["PostFranchiseCollection"].ToString());
+
+            if (toFranchiseBookings)
+            {
+                #region Franchise  Bookings 
 
 
+                try
+                {
+                    Logger.WriteLog("Started Franchise Booking...");
+                    List<Franchise> franchiseList = FranchiseAPI.GetFranchiseCollection(companyid, journeyDate);
+                    Logger.WriteLog("Entry No 4: Franchise Collection List: " + franchiseList.Count);
 
+                    if (franchiseList != null && franchiseList.Count > 0)
+                    {
+                        FranchiseAPI.CreateSaleForFranchiseCollection(companyid, franchiseList);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog("FranchisePosting", "PostFranchiseBookings", "Exception in Posting Franchise Bookings: " + ex.Message);
+                }
+
+
+                #endregion
+            }
+            
             Boolean toPostJournalEntry = Convert.ToBoolean(ConfigurationManager.AppSettings["PostJournalEntry"].ToString());
             if (toPostJournalEntry)
             {
-                Logger.WriteLog("Journal Entry Creation and Posting");
-                List<Journal> journalList = AccountingAPI.GetJournals(companyid);
-                if (journalList != null && journalList.Count > 0)
+                #region PostJournalEntry 
+
+                string logpath = ConfigurationManager.AppSettings["LogPath"];
+                if (!File.Exists(@logpath + "Alertfile2" + ".txt"))
                 {
+                    Logger.WriteLog("Journal Entry Creation and Posting");
+                    List<Journal> journalList = AccountingAPI.GetJournals(companyid);
                     Logger.WriteLog("Journal list Count: " + journalList.Count);
-                    for (int i = 0; i < journalList.Count; i++)
+                    if (journalList != null && journalList.Count > 0)
                     {
-                        Journal jl = journalList[i];
-                        List<JournalDetail> jdList = AccountingAPI.GetJournalDetail(jl.JournalId, jl.Type);
-                        TallyResponse tr = TallyPostingAPI.PostJournal(jl, jdList);
-                        if (tr != null && tr.Status == "1")
+                        for (int i = 0; i < journalList.Count; i++)
                         {
-                            //AccountingAPI.UpdateTallyJournalIdInCRS(jl.JournalId, tr.EntityId);
-                        }
-                        else
-                        {
-                            Logger.WriteLogAlert("AccountingAPI " + "Error:PostingJournalIdInTally For JournalID: "  +  jl.JournalId);
-                          
+                            Logger.WriteLog("Entry Serial Journal : " + i + 1);
+                            Journal jl = journalList[i];
+                            List<JournalDetail> jdList = AccountingAPI.GetJournalDetail(jl.JournalId, jl.Type);
+                            try
+                            {
+                                TallyResponse tr = TallyPostingAPI.PostJournal(jl, jdList);
+                                if (tr != null && tr.Status == "1")
+                                {
+                                    AccountingAPI.UpdateTallyJournalIdInCRS(jl.JournalId, tr.EntityId);
+                                }
+                                //else
+                                //{
+                                //    Logger.WriteLogAlert("AccountingAPI " + "Error:PostingJournalIdInTally For JournalID: " + jl.JournalId);
+                                //    //PostingAPI.UpdatePostingStatusForException(companyid, journalList[i].JournalDateTime, 10);
+                                //    //throw new Exception();
+
+                                //}
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.WriteLog("Posting Error", "Posting Error", " Posting Error: " + ex.Message);
+                                //Logger.WriteLogAlert2("Posting Erro" + " Error for Posting : " + ex.Message);
+                                PostingAPI.UpdatePostingStatusForException(companyid, journalList[i].JournalDateTime, 10);
+                            }
+
                         }
                     }
+
 
                     //if (EntryCounter.GetInstance().GetCount() != journalList.Count)
                     //{
                     //    Email.SendMail("Mismatch in No Of Entry Generated Vs. Posted for Journey Date: " + journalList[0].JournalDateTime + " No Of Entry Generated: " + EntryCounter.GetInstance().GetCount() + " No Of Entry Posted: " + journalList.Count);
                     //}
                 }
-            }
-
-
-
-            
+                else
+                {
+                    Logger.WriteLog("Posting not started, because there is generating error already exist. First remove it then continue..");
+                }
+                #endregion
+            }   
         }
     }
 }

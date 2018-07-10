@@ -40,7 +40,7 @@ namespace KabraTallyPosting.CRSAPI
                         }
                         else
                         {
-                            Logger.WriteLog("MastersAPI", "InsertUpdateLedgersInCRS", ledgerList[i].LedgerName);
+                            //Logger.WriteLog("MastersAPI", "InsertUpdateLedgersInCRS", ledgerList[i].LedgerName);
                         }
                     }
                 }

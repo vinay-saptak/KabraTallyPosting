@@ -31,7 +31,7 @@ namespace KabraTallyPosting.CRSAPI
             string narration = "";
             try
             {
-                narration = "FRANCHISE COLLECTION FOR. " + fv.Bookingdate.ToString("dd-MM-yyyy") + " THROUGH: " + fv.FranchiseName;
+                narration = "FRANCHISE COLLECTION FOR. " + fv.JourneyDate.ToString("dd-MM-yyyy") + " THROUGH: " + fv.FranchiseName;
             }
             catch (Exception ex)
             {

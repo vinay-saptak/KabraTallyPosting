@@ -26,7 +26,7 @@ namespace KabraTallyPosting.CRSAPI
                 CRSDAL dal = new CRSDAL();
                 dal.AddParameter("p_companyId", companyid, ParameterDirection.Input);
                 dal.AddParameter("p_journeyDate", journeyDate, ParameterDirection.Input);
-                DataSet dstOutPut = dal.ExecuteSelect("spKabraTallyGet_BranchBooking", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", false, "", false);
+                DataSet dstOutPut = dal.ExecuteSelect("spKabraTallyGet_BranchBooking_test", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", false, "", false);
 
                 if (dstOutPut != null && dstOutPut.Tables != null && dstOutPut.Tables.Count > 0)
                 {
@@ -87,30 +87,35 @@ namespace KabraTallyPosting.CRSAPI
                 for (int i = 0; i < bookingsList.Count; i++)
                 {
                     Booking b = bookingsList[i];
-
-                    try
+                    if (strErr == "")
                     {
-                        dal = new CRSDAL();
-                        dal.AddParameter("p_CompanyID", companyId, ParameterDirection.Input);
-                        dal.AddParameter("p_JourneyDate", bookingsList[i].JourneyDate, ParameterDirection.Input);
-                        dal.AddParameter("p_DebitLedgerId", bookingsList[i].DebitLedgerId, ParameterDirection.Input);
-                        dal.AddParameter("p_CreditLedgerId", bookingsList[i].CreditLedgerId, ParameterDirection.Input);
-                        dal.AddParameter("p_ClassID", bookingsList[i].ClassId, ParameterDirection.Input);
-                        dal.AddParameter("p_TotalAmount", bookingsList[i].TotalAmount, ParameterDirection.Input);
-                        dal.AddParameter("p_NetAmount", bookingsList[i].NetAmount, ParameterDirection.Input);
-                        dal.AddParameter("p_GST", bookingsList[i].GST, ParameterDirection.Input);
-                        dal.AddParameter("p_docnumber", bookingsList[i].DocNumber, 300, ParameterDirection.Input);
+                        try
+                        {
+                            dal = new CRSDAL();
+                            dal.AddParameter("p_CompanyID", companyId, ParameterDirection.Input);
+                            dal.AddParameter("p_JourneyDate", bookingsList[i].JourneyDate, ParameterDirection.Input);
+                            dal.AddParameter("p_DebitLedgerId", bookingsList[i].DebitLedgerId, ParameterDirection.Input);
+                            dal.AddParameter("p_CreditLedgerId", bookingsList[i].CreditLedgerId, ParameterDirection.Input);
+                            dal.AddParameter("p_ClassID", bookingsList[i].ClassId, ParameterDirection.Input);
+                            dal.AddParameter("p_TotalAmount", bookingsList[i].TotalAmount, ParameterDirection.Input);
+                            dal.AddParameter("p_NetAmount", bookingsList[i].NetAmount, ParameterDirection.Input);
+                            dal.AddParameter("p_GST", bookingsList[i].GST, ParameterDirection.Input);
+                            dal.AddParameter("p_docnumber", bookingsList[i].DocNumber, 300, ParameterDirection.Input);
 
-                        int status = dal.ExecuteDML("spKabraTallySet_BranchCollection", CommandType.StoredProcedure, 0, ref strErr);
-                        EntryCounter.GetInstance().AddCount(1);
+                            int status = dal.ExecuteDML("spKabraTallySet_BranchCollection_Test", CommandType.StoredProcedure, 0, ref strErr);
+                            EntryCounter.GetInstance().AddCount(1);
+                            if (strErr != "")
+                            {
+                                throw new Exception();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteLog("BookingAPI", "CreateJournalForUserWiseCollection", " Error for Branch: " + bookingsList[i].BranchName + " " + ex.Message);
+                            Logger.WriteLogAlert2("BookingAPI " + "Error:CreateJournalForUserWiseCollection For JournalID: " + bookingsList[i].BranchName + " " + ex.Message);
+                            PostingAPI.UpdatePostingStatusForException(companyId, bookingsList[i].JourneyDate, 9);
 
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog("BookingAPI", "CreateJournalForUserWiseCollection", " Error for Branch: " + bookingsList[i].BranchName + " " + ex.Message);
-                        Logger.WriteLogAlert("BookingAPI " + "Error:CreateJournalForUserWiseCollection For JournalID: " + bookingsList[i].BranchName + " " + ex.Message);
-                        PostingAPI.UpdatePostingStatusForException(companyId, bookingsList[i].JourneyDate,7);
-
+                        }
                     }
 
 

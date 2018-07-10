@@ -31,6 +31,7 @@ namespace KabraTallyPosting.Validation
                         {
                             vr.Status = 0;
                             vr.ErrorMessage = "Ledger Id does not exists for AgentName: " + OnlineAgentCollectionList[i].AgentName + " and For AgentId: " + OnlineAgentCollectionList[i].AgentId + "JourneyDate: " + OnlineAgentCollectionList[i].JourneyDate;
+                            Logger.WriteLog("Ledger Id does not exists for AgentName: " + OnlineAgentCollectionList[i].AgentName + " and For AgentId: " + OnlineAgentCollectionList[i].AgentId + "JourneyDate: " + OnlineAgentCollectionList[i].JourneyDate);
                             break;
                         }
 
@@ -38,6 +39,7 @@ namespace KabraTallyPosting.Validation
                         {
                             vr.Status = 0;
                             vr.ErrorMessage = "Class Id does not exists for BusId: " + OnlineAgentCollectionList[i].BusId + " and For AgentId: " + OnlineAgentCollectionList[i].AgentId + "JourneyDate: " + OnlineAgentCollectionList[i].JourneyDate;
+                            Logger.WriteLog("Class Id does not exists for AgentName: " + OnlineAgentCollectionList[i].AgentName + " and For AgentId: " + OnlineAgentCollectionList[i].AgentId + "JourneyDate: " + OnlineAgentCollectionList[i].JourneyDate);
                             break;
                         }
                     }
@@ -45,7 +47,7 @@ namespace KabraTallyPosting.Validation
                 else
                 {
                     vr.Status = 0;
-                    //vr.ErrorMessage = "No data exists for Offline Agent Collection";
+                    vr.ErrorMessage = "No data exists for Offline Agent Collection";
                 }
             }
             catch (Exception ex)

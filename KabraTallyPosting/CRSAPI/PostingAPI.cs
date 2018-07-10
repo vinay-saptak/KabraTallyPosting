@@ -168,7 +168,9 @@ namespace KabraTallyPosting.CRSAPI
                 CRSDAL dal = new CRSDAL();
                 dal.AddParameter("p_CompanyID", companyId, ParameterDirection.Input);
                 dal.AddParameter("p_StatusId", 1, ParameterDirection.Input);
+
                 DataSet dstOutPut = dal.ExecuteSelect("spTallyGet_PostingStatus_20180130", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", false, "", false);
+
                 if (dstOutPut != null && dstOutPut.Tables != null && dstOutPut.Tables.Count > 0)
                 {
                     for (int j = 0; j < dstOutPut.Tables.Count; j++)
@@ -185,7 +187,6 @@ namespace KabraTallyPosting.CRSAPI
                             }
                         }
                     }
-
                 }
             }
             catch (Exception ex)
@@ -203,7 +204,7 @@ namespace KabraTallyPosting.CRSAPI
                 string strErr = "";
                 dal.AddParameter("p_CompanyId", companyid, ParameterDirection.Input);
                 dal.AddParameter("p_JourneyDate", journeydate, ParameterDirection.Input);
-                dal.AddParameter("p_JobId", 1, ParameterDirection.Input);
+                dal.AddParameter("p_JobId", 0, ParameterDirection.Input);
                 dal.AddParameter("p_StatusId", statusid, ParameterDirection.Input);
                 dal.AddParameter("p_Remarks", "Exception Occured In Creation", 200, ParameterDirection.Input);
                 dal.AddParameter("p_UserId", 0, ParameterDirection.Input);
@@ -219,8 +220,5 @@ namespace KabraTallyPosting.CRSAPI
                 Logger.WriteLog("PostingStatusAPI", "UpdatePostingStatus", ex.Message);
             }
         }
-
-
-
     }
 }

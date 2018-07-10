@@ -25,6 +25,22 @@ namespace KabraTallyPosting.TallyAPI
             httpresp.Close();
             return str;
         }
+        //new
+        public static string isCompanyOpen(string data)
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(data);
+            HttpWebRequest httpReq = (HttpWebRequest)WebRequest.Create("http://localhost:9000");
+            httpReq.Method = "POST";
+            httpReq.ContentLength = bytes.Length;
+            httpReq.ContentType = "application/charset=utf-8";
+            httpReq.GetRequestStream().Write(bytes, 0, bytes.Length);
+            httpReq.Timeout = -1;
+            HttpWebResponse httpresp = (HttpWebResponse)httpReq.GetResponse();
+            StreamReader sr = new StreamReader(httpresp.GetResponseStream());
+            string str = sr.ReadToEnd();
+            httpresp.Close();
+            return str;
+        }
 
         public static string SendRequestToTally(string data)
         {

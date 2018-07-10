@@ -30,9 +30,22 @@ namespace KabraTallyPosting.TallyAPI
             bool isTallyInstanceRunning = false;
             try
             {
-                string ledgerXML = TallyMessageCreator.CreateSingleLedgerDetailRequestMessage();
-                TallyConnector.PostDataToTally(ledgerXML);
-                isTallyInstanceRunning = true;
+                //string ledgerXML = TallyMessageCreator.CreateSingleLedgerDetailRequestMessage();
+                //TallyConnector.PostDataToTally(ledgerXML);
+
+                string ledgerXML = TallyMessageCreator.CreateIsCompanyOpenRequestMessage();
+                string response = TallyConnector.isCompanyOpen(ledgerXML);
+
+
+                if (!response.Contains("Server company is not available!"))
+                {
+                    isTallyInstanceRunning = true;
+                }
+                else
+                {
+                    Logger.WriteLog("TallyPostingAPI", "IsTallyInstanceRunning", "Company is Not Selected In Tally");
+                }
+                    
             }
             catch(Exception ex)
             {

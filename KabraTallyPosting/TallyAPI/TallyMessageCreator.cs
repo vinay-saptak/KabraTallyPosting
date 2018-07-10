@@ -94,6 +94,27 @@ namespace KabraTallyPosting.TallyAPI
             }
             return xmlmessage;
         }
+        public static string CreateIsCompanyOpenRequestMessage()
+        {
+            string xmlmessage = "";
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                string templateDirectory = ConfigurationManager.AppSettings["XMLTemplateFilesPath"].ToString();
+                string fileName = "check.xml";
+                xmlDoc.Load(templateDirectory + fileName);
+                string tallyCompanyName = ConfigurationManager.AppSettings["TallyCompanyName"].ToString();
+
+                XmlNode companyNameNode = xmlDoc.SelectSingleNode("/ENVELOPE/BODY/DESC/STATICVARIABLES/SVCOMPANYCONNECTNAME");
+                companyNameNode.InnerText = tallyCompanyName;
+                xmlmessage = xmlDoc.OuterXml;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("TallyMessageCreator", "CreateSingleLedgerDetailRequestMessage", ex.Message);
+            }
+            return xmlmessage;
+        }
 
 
         public static string CreateJournalXML(Journal jl, List<JournalDetail> jdList)
@@ -202,11 +223,12 @@ namespace KabraTallyPosting.TallyAPI
 
                 if (env == "Dev")
                 {
-                    strDate = "20180301";
+                    strDate = "20180302";
                 }
                 else if (env == "Prod")
                 {
                     strDate = jl.JournalDateTime.ToString("yyyyMMdd");
+
                 }
 
                 //Date

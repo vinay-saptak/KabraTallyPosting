@@ -17,7 +17,7 @@ namespace KabraTallyPosting.CRSAPI
             List<Journal> journalList = new List<Journal>();
             try
             {
-                journalList = GetJournals(companyId, "spKabraTallyGet_Journals");
+                journalList = GetJournals(companyId, "spKabraTallyGet_Journals_Test");
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace KabraTallyPosting.CRSAPI
                                 jl.Action = dstOutPut.Tables[j].Rows[i]["action"].ToString();
                                 jl.AccSysId = dstOutPut.Tables[j].Rows[i]["accsysid"].ToString();
                                 jl.AccSysPostDateTime = Convert.ToDateTime(dstOutPut.Tables[j].Rows[i]["accsyspostdatetime"].ToString());
-                                jl.BookingId = Convert.ToInt64(dstOutPut.Tables[j].Rows[i]["bookingid"].ToString());
+                                //jl.BookingId = Convert.ToInt64(dstOutPut.Tables[j].Rows[i]["bookingid"].ToString());
                                 jl.CompanyId = Convert.ToInt32(dstOutPut.Tables[j].Rows[i]["companyid"].ToString());
                                 jl.CurrencyId = Convert.ToInt32(dstOutPut.Tables[j].Rows[i]["currencyid"].ToString());
                                 jl.DocFormattedNumber = dstOutPut.Tables[j].Rows[i]["docformattednumber"].ToString();
@@ -62,7 +62,7 @@ namespace KabraTallyPosting.CRSAPI
                                 jl.JournalEntryDateTime = Convert.ToDateTime(dstOutPut.Tables[j].Rows[i]["journalentrydatetime"].ToString());
                                 jl.JournalId = Convert.ToInt32(dstOutPut.Tables[j].Rows[i]["voucherjournalid"].ToString());
                                 jl.Type = dstOutPut.Tables[j].Rows[i]["type"].ToString();
-                                jl.UserId = Convert.ToInt32(dstOutPut.Tables[j].Rows[i]["userid"].ToString());
+                                //jl.UserId = Convert.ToInt32(dstOutPut.Tables[j].Rows[i]["userid"].ToString());
 
                                 journalList.Add(jl);
                             }
@@ -89,7 +89,7 @@ namespace KabraTallyPosting.CRSAPI
                 CRSDAL dal = new CRSDAL();
                 dal.AddParameter("p_JournalId", JournalID, ParameterDirection.Input);
                 
-                DataSet dstOutPut = dal.ExecuteSelect("spTallyGet_JournalDetail_Kabra", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", false, "", false);
+                DataSet dstOutPut = dal.ExecuteSelect("spTallyGet_JournalDetail_Kabra_Test", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", false, "", false);
              
                 if (dstOutPut != null && dstOutPut.Tables != null && dstOutPut.Tables.Count > 0)
                 {
@@ -135,7 +135,7 @@ namespace KabraTallyPosting.CRSAPI
                 dal.AddParameter("p_journalId", journalId, ParameterDirection.Input);
                 dal.AddParameter("p_accsysid", tallyId, 100, ParameterDirection.Input);
                 //dal.AddParameter("p_ErrMsg", strErr, strErr.Length, ParameterDirection.Output);
-                 DataSet dstoutput = dal.ExecuteSelect("spKabraTallySet_JournalId", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", true, "", false);
+                 DataSet dstoutput = dal.ExecuteSelect("spKabraTallySet_JournalId_Test", CommandType.StoredProcedure, 0, ref strErr, "p_ErrMessage", true, "", false);
 
                 if (Convert.ToInt32(dstoutput.Tables[0].Rows[0]["countrow"].ToString()) == 0 || Convert.ToInt32(dstoutput.Tables[0].Rows[0]["countrow"].ToString()) > 1 || strErr != "")
                 {
